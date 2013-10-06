@@ -1,6 +1,6 @@
 {
   "version": "1.3",
-  "name": "Foodoku",
+  "name": "Fudoku",
   "description": "Sudoku",
   "launch_path": "/index.html",
   "developer": {
@@ -8,8 +8,8 @@
     "url": "https://github.com/SuperFootballStar/FFDoku"
   },
   "icons": {
-    "128": "/FFDoku/icon.png",
-    "64": "/FFDoku/icon-64.png"
+    "128": "/icons/icon.png",
+    "64": "/icons/icon-64.png"
   },
   "orientation": "portrait"
 }
