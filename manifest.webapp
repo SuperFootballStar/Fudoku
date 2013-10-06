@@ -1,11 +1,11 @@
 {
-  "version": "1.2",
-  "name": "FFDoku",
+  "version": "1.3",
+  "name": "Foodoku",
   "description": "Sudoku",
-  "launch_path": "/FFDoku/index.html",
+  "launch_path": "/index.html",
   "developer": {
-    "name": "taratatach",
-    "url": "https://github.com/taratatach/FFDoku"
+    "name": "SuperFootballStar",
+    "url": "https://github.com/SuperFootballStar/FFDoku"
   },
   "icons": {
     "128": "/FFDoku/icon.png",

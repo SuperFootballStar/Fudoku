@@ -38,6 +38,26 @@ function addClass(node, className) {
         node.className += " " + className;
 }
 
+/* Get the class name of a node that starts with className */
+/* This is used to get the 'rowX' and 'columnX' class names */
+function getClassNameLike(node, className) {
+    var classes = node.className.split(" ");
+
+    for (var i=0; i<classes.length; i++) {
+      if (classes[i].indexOf(className) == 0) {
+        return classes[i]
+      }
+    }
+    
+    // this should not happen when searching for row or column names
+    // however the empry string is a good indicator that it was not found
+    return "";
+}
+
+function removeDuplicates(elements) {
+  
+}
+
 /* To remove a class from a node */
 function removeClass(node, className) {
   var classes = node.className.split(" ");

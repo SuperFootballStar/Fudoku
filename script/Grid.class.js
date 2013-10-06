@@ -29,7 +29,7 @@ function Grid (game) {
   this.game = game;
 
   this.commands = document.getElementById('commands');
-  this.commands.className = 'hidden';
+  this.commands.className = 'hide';
   this.gameInfos = document.getElementById('gameInfos');
   this.gameInfos.className = 'hidden';
   this.about = document.getElementById('about');
@@ -42,6 +42,7 @@ function Grid (game) {
   this.ok = document.getElementById('ok');
   this.inserts = document.getElementsByClassName('insert');
   this.erase = document.getElementById('erase');
+  this.help = document.getElementById('help');
 
   this.initGrid(this.game.baseGrid);
   this.addEvents();
@@ -59,19 +60,29 @@ Grid.prototype.initGrid = function (gameGrid) {
   for (var i=0; i<9; i++) {
     var tr = document.createElement('tr');
     table.appendChild(tr);
+    var currentRow = 'row'+(i+1);
 
     this.cells[i] = [];
     for (var j=0; j<9; j++) {
       var td = document.createElement('td');
+      var currentColumn = 'column'+(j+1);
 
+      td.id = String((i+1) + '-' + (j+1));
       if (!gameGrid[i][j]) {
-        td.id = String((i+1) + '-' + (j+1));
         td.className = 'cell';
       }
       else {
         td.className = 'number';
         td.innerHTML = gameGrid[i][j];
       }
+      var remainder = i % 3;
+      var blockRowNumber = ((i-remainder)/3)+1;
+      remainder = j % 3;
+      var blockColumnNumber = ((j-remainder)/3)+1;
+      
+      addClass(td, currentRow);
+      addClass(td, currentColumn);
+      addClass(td, 'block'+blockRowNumber+blockColumnNumber);
 
       if (i % 3 == 2)
           addClass(td, 'borderBottom');
@@ -117,6 +128,7 @@ Grid.prototype.addEvents = function () {
 
   document.addEventListener('click', function(e) {
     self.getEvtBody.call(self, e);
+    self.removeSelections.call(self, e);
   }, false);
 
   this.newGame.addEventListener('click', function(e) {
@@ -154,6 +166,10 @@ Grid.prototype.addEvents = function () {
   this.erase.addEventListener('click', function(e) {
     self.getEvtErase.call(self, e);
   }, false);
+
+  this.help.addEventListener('click', function(e) {
+    self.getEvtHelp.call(self, e);
+  }, false);
 }
 
 /*
@@ -161,8 +177,37 @@ Grid.prototype.addEvents = function () {
  * ( asserted with stopPropagation() in the other click handlers )
  */
 Grid.prototype.getEvtBody = function (e) {
-  this.commands.className = 'hidden';
+  this.commands.className = 'hide';
+  this.removeSelections.call(this, e);
 }
+
+Grid.prototype.removeSelections = function (e) {
+  var selectedCells = document.getElementsByClassName('selected-row');
+  for (var i=selectedCells.length-1; i>=0; i--) {
+    removeClass(selectedCells[i], 'selected-row');
+  }
+
+  var selectedCells = document.getElementsByClassName('selected-column');
+  for (var i=selectedCells.length-1; i>=0; i--) {
+    removeClass(selectedCells[i], 'selected-column');
+  }
+
+  var selectedCells = document.getElementsByClassName('selected-block');
+  for (var i=selectedCells.length-1; i>=0; i--) {
+    removeClass(selectedCells[i], 'selected-block');
+  }
+
+  var selectedCells = document.getElementsByClassName('selected');
+  for (var i=selectedCells.length-1; i>=0; i--) {
+    removeClass(selectedCells[i], 'selected');
+  }
+
+  var selectedCells = document.getElementsByClassName('not-this-number');
+  for (var i=selectedCells.length-1; i>=0; i--) {
+    removeClass(selectedCells[i], 'not-this-number');
+  }
+}
+
 
 /*
  * Called when a cell is clicked, either with a revealed number or
@@ -171,20 +216,42 @@ Grid.prototype.getEvtBody = function (e) {
  */
 Grid.prototype.getEvtClickCell = function (e) {
   if (this.gameInfos.className == 'hidden' && this.about.className == 'hidden') {
-    if (this.commands.className == 'hidden') {
+    //if (this.commands.className == 'hide') {
+      this.removeSelections.call(this, e);
+      this.commands.className = 'hide';
+
       if (this.modifiedCell) {
         removeClass(this.modifiedCell, 'selected');
       }
 
       this.modifiedCell = e.target;
+      var strs = this.modifiedCell.id.split('-');
+
+      var rowClass = getClassNameLike(this.modifiedCell, 'row');
+      var columnClass = getClassNameLike(this.modifiedCell, 'column');
+      var blockClass = getClassNameLike(this.modifiedCell, 'block');
+      
+      var rowCells = document.getElementsByClassName(rowClass);
+      for (var i=0; i<rowCells.length; i++) {
+        addClass(rowCells[i], 'selected-row');
+      }
+
+      var columnCells = document.getElementsByClassName(columnClass);
+      for (var i=0; i<columnCells.length; i++) {
+        addClass(columnCells[i], 'selected-column');
+      }
+      
+      var blockCells = document.getElementsByClassName(blockClass);
+      for (var i=0; i<blockCells.length; i++) {
+        addClass(blockCells[i], 'selected-block');
+      }
+      
       addClass(this.modifiedCell, 'selected');
 
-      var strs = this.modifiedCell.id.split('-');
-      this.commands.className = 'displayed';
-    }
-    else {
-      this.commands.className = 'hidden';
-    }
+      this.commands.className = 'show';
+    //}
+    //else {
+    //}
     e.stopPropagation();
   }
 }
@@ -223,7 +290,8 @@ Grid.prototype.getEvtChangeCell = function (e) {
  */
 Grid.prototype.getEvtInsert = function (e) {
   this.modifiedCell.innerHTML = e.target.innerHTML;
-  this.commands.className = 'hidden';
+  this.commands.className = 'hide';
+  this.removeSelections.call(this, e);
   var event = document.createEvent('HTMLEvents');
   event.initEvent('change',true,false);
   this.modifiedCell.dispatchEvent(event);
@@ -245,7 +313,54 @@ Grid.prototype.getEvtErase = function(e) {
   this.modifiedCell.innerHTML = '';
   //removeClass(this.modifiedCell, 'right');
   removeClass(this.modifiedCell, 'wrong');
-  this.commands.className = 'hidden';
+  this.commands.className = 'hide';
+  this.removeSelections.call(this, e);
+  e.stopPropagation();
+ }
+
+/*
+ * Called when the user clicks on the Help button in the insertion "popup"
+ */
+Grid.prototype.getEvtHelp = function(e) {
+  // get cell line and cell column
+  var strs = this.modifiedCell.id.split('-');
+  var line = parseInt(strs[0]);
+  var col = parseInt(strs[1]);
+  var blockClass = getClassNameLike(this.modifiedCell, 'block');
+  var elements = []
+
+  var rowCells = document.getElementsByClassName('row'+line);
+  for (var i=0; i<rowCells.length; i++) {
+    if (rowCells[i].innerHTML.length > 0) {
+      elements.push(rowCells[i].innerHTML);
+    }
+  }
+
+  var columnCells = document.getElementsByClassName('column'+col);
+  for (var i=0; i<columnCells.length; i++) {
+    if (columnCells[i].innerHTML.length > 0) {
+      elements.push(columnCells[i].innerHTML);
+    }
+  }
+  
+  var blockCells = document.getElementsByClassName(blockClass);
+  for (var i=0; i<blockCells.length; i++) {
+    if (blockCells[i].innerHTML.length > 0) {
+      elements.push(blockCells[i].innerHTML);
+    }
+  }
+  
+  uniqueElements = elements.filter(function(element, position) {
+    return elements.indexOf(element) == position;
+  });
+  
+  uniqueElements.sort();
+  
+  for (var i=0; i<uniqueElements.length; i++) {
+    var commandElement = document.getElementById('com'+uniqueElements[i]);
+    addClass(commandElement, 'not-this-number');
+  }
+
   e.stopPropagation();
  }
 
@@ -254,7 +369,7 @@ Grid.prototype.getEvtErase = function(e) {
  * Shows the new game "popup"
  */
 Grid.prototype.getEvtNewGame = function (e) {
-  if (this.commands.className == 'hidden' && this.about.className == 'hidden') {
+  if (this.commands.className == 'hide' && this.about.className == 'hidden') {
     this.gameInfos.className = 'displayed';
     e.stopPropagation();
   }
@@ -265,7 +380,7 @@ Grid.prototype.getEvtNewGame = function (e) {
  * Shows the about "popup"
  */
 Grid.prototype.getEvtAbout = function (e) {
-  if (this.commands.className == 'hidden' && this.gameInfos.className == 'hidden') {
+  if (this.commands.className == 'hide' && this.gameInfos.className == 'hidden') {
     this.about.className = 'displayed';
     e.stopPropagation();
   }
@@ -316,7 +431,7 @@ Grid.prototype.getEvtStartGame = function (evt) {
  * from the Game class
  */
 Grid.prototype.getEvtReset = function (e) {
-  if (this.commands.className == 'hidden'
+  if (this.commands.className == 'hide'
     && this.gameInfos.className == 'hidden'
     && this.about.className == 'hidden') {
     this.game.resetGame();

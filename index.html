@@ -19,7 +19,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>FFDoku</title>
+    <title>Foodoku</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="style/design.css" />
     <link rel="stylesheet" href="shared/style/headers.css" />
@@ -31,15 +31,36 @@
   <body>
     <section id="game-view" role="region">
       <header>
-        <h1>FFDoku</h1>
+        <h1>Foodoku</h1>
       </header>
 
       <div id="content">
-        <section>
+
+        <section id="grid-container">
           <table id="grid"></table>
+          <div id="commands">
+            <table id="numbers">
+              <tr>
+                <td class="insert" id="com1">1</td>
+                <td class="insert" id="com2">2</td>
+                <td class="insert" id="com3">3</td>
+                <td class="insert" id="com4">4</td>
+                <td class="insert" id="com5">5</td>
+                <td class="insert" id="com6">6</td>
+                <td class="insert" id="com7">7</td>
+                <td class="insert" id="com8">8</td>
+                <td class="insert" id="com9">9</td>
+                <td id="erase" class="danger">X</td>
+                <td id="help" class="info">?</td>
+                <!--<td><button id="erase" class="danger">X</button></td>
+                <td><button id="help" class="info">?</button></td>-->
+              </tr>
+            </table>
+          </div>
         </section>
 
-        <section id="commands">
+        
+        <section id="oldcommands" style="display: none;">
           <table id="numbers">
             <tr>
               <td class="insert">1</td>
