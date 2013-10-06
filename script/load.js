@@ -1,6 +1,8 @@
 /*
-  FFDoku is a Sudoku game primarily designed for the Firefox OS
+  Fudoku is a Sudoku game primarily designed for the Firefox OS
+  Fudoku is a fork of FFDoku
   Copyright (C) 2012-2013 Erwan GUYADER <taratatach@mozfr.org>, Antoine DUPARAY <antoine.duparay@mozfr.org>
+  Copyright (C) 2013 Super Football Star
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as
