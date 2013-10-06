@@ -13,15 +13,15 @@ I will continue developing it until I think it's good enough for myself.
 Authors
 =======
 
-Original authors of FFDoku: Erwan GUYADER  and Antoine DUPARAY
-Currrent author of Fudoku: Super Football Star
+-Original authors of FFDoku: Erwan GUYADER  and Antoine DUPARAY
+-Currrent author of Fudoku: Super Football Star
 
 Tested on
 =======
 
-Devices: ZTE Open
-Browsers: Firefox 24 and Chromium 28 (there are some bugs on Chromium)
-Other: [Firefox OS Simulator](https://addons.mozilla.org/en-US/firefox/addon/firefox-os-simulator/)
+-Devices: ZTE Open
+-Browsers: Firefox 24 and Chromium 28 (there are some bugs on Chromium)
+-Other: [Firefox OS Simulator](https://addons.mozilla.org/en-US/firefox/addon/firefox-os-simulator/)
 
 Licence
 =======
